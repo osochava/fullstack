@@ -1,5 +1,3 @@
-# fullstack-course
-only for me
 ```mermaid
 sequenceDiagram
     participant browser
