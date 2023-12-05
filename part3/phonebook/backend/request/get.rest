@@ -1,0 +1,48 @@
+GET http://localhost:3001/info
+
+###
+
+GET http://localhost:3001/api/persons
+
+###
+
+GET http://localhost:3001/api/persons/3
+
+###
+
+DELETE  http://localhost:3001/api/persons/3
+
+###
+POST http://localhost:3001/api/persons/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Fred2 Davidson",
+    "number": "215-132-442"
+}
+
+###
+POST http://localhost:3001/api/persons/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "",
+    "number": "213-132-442"
+}
+###
+POST http://localhost:3001/api/persons/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Fred Davidson",
+    "number": ""
+}
+
+###
+POST http://localhost:3001/api/persons/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "",
+    "number": ""
+}
