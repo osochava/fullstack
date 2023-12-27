@@ -22,6 +22,8 @@ const errorHandler = (error, request, responce, next) => {
 
     if (error.name === 'CastError') {
         return responce.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError') {
+        return response.status(400).json({ error: error.message })
     }
     next(error)
 }
@@ -30,42 +32,8 @@ app.use(cors())
 app.use(express.static('dist'))
 app.use(express.json())
 app.use(morgan('tiny'))
-// app.use(morgan(function (tokens, req, res) {
-//     return [
-//         tokens.method(req, res),
-//         tokens.url(req, res),
-//         tokens.status(req, res),
-//         tokens.res(req, res, 'content-length'), '-',
-//         tokens['response-time'](req, res), 'ms',
-//         tokens['POST data'](req, res)
-//     ].join(' ')
-// }))
-
-// let persons = [
-//     {
-//         id: 1,
-//         name: "Arto Hellas",
-//         number: "040-123456"
-//     },
-//     {
-//         id: 2,
-//         name: "Ada Lovelace",
-//         number: "39-44-5323523"
-//     },
-//     {
-//         id: 3,
-//         name: "Dan Abramov",
-//         number: "12-43-234345"
-//     },
-//     {
-//         id: 4,
-//         name: "Mary Poppendieck",
-//         number: "39-23-6423122"
-//     }
-// ]
 
 app.get('/api/persons', (request, response) => {
-    //response.json(persons)
     Person.find({}).then(people => {
         response.json(people)
     })
@@ -83,28 +51,15 @@ app.get('/api/persons/:id', (request, response) => {
         response.json(person)
     })
         .catch(error => next(error))
-    //const id = Number(request.params.id)
-    // const person = persons.find(person => person.id === id)
-    // response.send(person)
 })
 
-app.delete('/api/persons/:id', (request, response) => {//, next) => {
+app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndDelete(request.params.id)
         .then(result => {
             response.status(204).end()
         })
         .catch(error => next(error))
-
-    // const id = Number(request.params.id)
-    // persons = persons.filter(person => person.id !== id)
-
-    // response.status(204).end()
 })
-
-
-// const getNewId = () => {
-//     return Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) + 1
-// }
 
 app.post('/api/persons', (request, response) => {
     console.log(request.body)
@@ -120,46 +75,25 @@ app.post('/api/persons', (request, response) => {
         })
     }
     console.log(body.name.toLowerCase())
-    //const newName = body.name.toLowerCase()
-    //const personWithSameName = persons.find(p => p.name.toLowerCase() === newName)
-    //console.log(personWithSameName)
-    //if (personWithSameName) {
-    //    return response.status(400).json({
-    //        error: 'name must be unique'
-    //    })
-    //}
-
-    // console.log(body.number)
-    // const personWithSameNumber = persons.find(p => p.number === body.number)
-    // console.log(personWithSameNumber)
-    // if (personWithSameNumber) {
-    //     return response.status(400).json({
-    //         error: 'number must be unique'
-    //     })
-    // }
     const person = new Person({
         name: body.name,
         number: body.number
-        // id: getNewId()
     })
-
-    person.save().then(savedPerson => {
-        console.log(`Added ${person.name} number ${person.number} to phonebook`)
-        response.json(savedPerson)
-        //mongoose.connection.close()
-    })
-    //persons = persons.concat(person)
-    //response.json(person)
+    person.save()
+        .then(savedPerson => {
+            console.log(`Added ${person.name} number ${person.number} to phonebook`)
+            response.json(savedPerson)
+        })
+        .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, responce, next) => {
     console.log(request.body)
-    const body = request.body
-    const person = new Person({
-        name: body.name,
-        number: body.number
-    })
-    Note.findByIdAndUpdate(request.params.id, person, { new: true })
+    const { name, number } = request.body
+    Note.findByIdAndUpdate(
+        request.params.id,
+        { name, number },
+        { new: true, runValidators: true, content: 'query' })
         .then(updatedPerson => {
             response.json(updatedPerson)
         })
