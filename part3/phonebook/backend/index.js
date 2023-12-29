@@ -17,11 +17,11 @@ const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
 
-const errorHandler = (error, request, responce, next) => {
+const errorHandler = (error, request, response, next) => {
     console.log(error.message)
 
     if (error.name === 'CastError') {
-        return responce.status(400).send({ error: 'malformatted id' })
+        return response.status(400).send({ error: 'malformatted id' })
     } else if (error.name === 'ValidationError') {
         return response.status(400).json({ error: error.message })
     }
@@ -46,7 +46,7 @@ app.get('/info', async (request, response) => {
     response.send(`<p>Phonebook has info for ${count} people</p><p>${d}</p>`)
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
     Person.findById(request.params.id).then(person => {
         response.json(person)
     })
@@ -61,7 +61,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
         .catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     console.log(request.body)
     const body = request.body
     if (!body.name) {
@@ -87,10 +87,10 @@ app.post('/api/persons', (request, response) => {
         .catch(error => next(error))
 })
 
-app.put('/api/persons/:id', (request, responce, next) => {
+app.put('/api/persons/:id', (request, response, next) => {
     console.log(request.body)
     const { name, number } = request.body
-    Note.findByIdAndUpdate(
+    Person.findByIdAndUpdate(
         request.params.id,
         { name, number },
         { new: true, runValidators: true, content: 'query' })
