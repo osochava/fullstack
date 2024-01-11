@@ -47,15 +47,15 @@ const App = () => {
     if (found === undefined) {
       const newPerson = { name: newName, number: newNumber }
       personsServices.create(newPerson)
-        .then(response => {
-          setPersons([...persons, response])
+        .then(createdPerson => {
+          setPersons([...persons, createdPerson])
           setNewName('')
           setNewNumber('')
           setNotification(false, `Added ${newName}`)
         })
         .catch(error => {
-          console.log(error)
-          //setNotificationMessage(error)
+          console.log(error.response.data.error)
+          setNotificationMessage(error.response.data.error)
         })
 
     } else {
@@ -75,6 +75,10 @@ const App = () => {
             if (error.response.status == 404) {
               setPersons(persons.filter(person => person.id != updatedPerson.id))
               setNotification(true, `Information of ${newName} has already been removed from server`)
+            }
+            if (error.response.status == 400) {
+              console.log(error.response.data.error)
+              setNotificationMessage(error.response.data.error)
             }
           })
       }
@@ -116,8 +120,7 @@ const App = () => {
       <h2>Numbers</h2>
 
       <Persons filteredPersons={filteredPersons} handleDeletePerson={handleDeletePerson} />
-    </
-    div>
+    </div>
   )
 }
 
