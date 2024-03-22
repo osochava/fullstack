@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test",
+    "lint": "eslint ."
   },
   "author": "Olga Sochava <osochava@gmail.com>",
   "license": "MIT",
@@ -17,6 +18,8 @@
     "mongoose": "^7.6.5"
   },
   "devDependencies": {
+    "@stylistic/eslint-plugin-js": "^1.7.0",
+    "eslint": "^8.57.0",
     "nodemon": "^3.0.2"
   }
 }
