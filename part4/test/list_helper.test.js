@@ -1,7 +1,6 @@
 const { test, describe } = require('node:test')
 const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
-const logger = require('../utils/logger')
 
 
 const listWithOneBlog = [
@@ -53,7 +52,7 @@ const listWithMultipleBlogs = [
     title: 'TDD harms architecture',
     author: 'Robert C. Martin',
     url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
-    likes: 0,
+    likes: 5,
     __v: 0
   },
   {
@@ -66,6 +65,12 @@ const listWithMultipleBlogs = [
   }
 ]
 
+test('dummy returns one', () => {
+  const blogs = []
+
+  const result = listHelper.dummy(blogs)
+  assert.strictEqual(result, 1)
+})
 
 describe('total likes', () => {
 
@@ -81,7 +86,7 @@ describe('total likes', () => {
 
   test('of a bigger list is calculated right', () => {
     const result = listHelper.totalLikes(listWithMultipleBlogs)
-    assert.strictEqual(result, 36)
+    assert.strictEqual(result, 41)
   })
 })
 
@@ -110,4 +115,49 @@ describe('favorite blog', () => {
   })
 })
 
+describe('mostBlogs', () => {
+
+  test('most blogs with empty list', () => {
+    const result = listHelper.mostBlogs([])
+    assert.strictEqual(result, undefined)
+  })
+
+  test('when list has only one blog, return right answer', () => {
+    const result = listHelper.mostBlogs(listWithOneBlog)
+    assert.deepStrictEqual(result, {
+      author: 'Edsger W. Dijkstra',
+      blogs: 1
+    })
+  })
+
+  test('when list has multiple blogersis calculated right', () => {
+    const result = listHelper.mostBlogs(listWithMultipleBlogs)
+    assert.deepStrictEqual(result, {
+      author: 'Robert C. Martin',
+      blogs: 3
+    })
+  })
+})
+
+describe('mostLikes', () => {
+
+  test('most likes with empty list', () => {
+    const result = listHelper.mostLikes([])
+    assert.strictEqual(result, undefined)
+  })
+
+  test('when list has only one blog, return right answer', () => {
+    const result = listHelper.mostLikes(listWithOneBlog)
+    assert.deepStrictEqual(result, {
+      author: 'Edsger W. Dijkstra',
+      likes: 5
+    })
+  })
+
+  test('when list has  multiple blogers is calculated right', () => {
+    const result = listHelper.mostLikes(listWithMultipleBlogs)
+    assert.strictEqual(result.likes, 17)
+    assert(result.author === 'Edsger W. Dijkstra' || result.author === 'Robert C. Martin')
+  })
+})
 
