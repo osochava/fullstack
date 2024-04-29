@@ -1,15 +1,13 @@
-const { test, after, beforeEach, describe } = require('node:test')
+const { test, after, beforeEach } = require('node:test')
 const assert = require('node:assert')
 const supertest = require('supertest')
 const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
 
 const app = require('../app')
 const api = supertest(app)
 
 const helper = require('./test_helper')
 const Blog = require('../models/blog')
-const User = require('../models/user')
 
 
 beforeEach(async () => {

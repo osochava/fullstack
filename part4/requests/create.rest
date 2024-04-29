@@ -28,3 +28,15 @@ content-type: application/json
     "title": "sample blog",
     "likes": 7
 }
+
+
+###
+POST http://localhost:3003/api/users/ 
+content-type: application/json
+
+{
+    "username": "admin",
+    "name": "adminadmin",
+    "password": "pwdd"
+}
+
