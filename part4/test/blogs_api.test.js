@@ -1,13 +1,15 @@
-const { test, after, beforeEach } = require('node:test')
+const { test, after, beforeEach, describe } = require('node:test')
 const assert = require('node:assert')
 const supertest = require('supertest')
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
 
 const app = require('../app')
 const api = supertest(app)
 
 const helper = require('./test_helper')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 
 beforeEach(async () => {
@@ -113,7 +115,7 @@ test('a blog can be deleted', async () => {
   assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1)
 })
 
-test.only('a blog can be updated', async () => {
+test('a blog can be updated', async () => {
   const blogsAtStart = await helper.blogsInDb()
   const blogId = blogsAtStart[0].id
   const blogToUpdate =
@@ -132,6 +134,7 @@ test.only('a blog can be updated', async () => {
   const updatedBlogFromDb = blogsAtEnd.find(b => b.id = blogId)
   assert.strictEqual(updatedBlogFromDb.likes, blogToUpdate.likes)
 })
+
 
 after(async () => {
   await mongoose.connection.close()
