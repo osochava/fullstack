@@ -55,7 +55,10 @@ const userExtractor = async (request, response, next) => {
   if (user)
     request.user = user
   else
-    request.user = null
+    //request.user = null
+    return response.status(401).json({
+      error: 'invalid user'
+    })
   next()
 }
 

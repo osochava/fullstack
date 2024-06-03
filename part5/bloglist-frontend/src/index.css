@@ -14,3 +14,11 @@
 .success {
   color: green;
 }
+
+button {
+  background-color: white;
+  border-radius: 13%;
+  border-width: 1px;
+  border-color: lightgray;
+  margin: 4px;
+}

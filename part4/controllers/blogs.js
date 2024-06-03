@@ -19,10 +19,11 @@ blogsRouter.post('/', async (request, response) => {
     })
 
   try {
-    const savedBlog = await blog.save()
-    user.blogs = user.blogs.concat(savedBlog._id)
+    const savedBlog = await blog.save()//.populate('user', { username: 1, name: 1, id: 1 })
+    const populatedBlog = await savedBlog.populate('user', { username: 1, name: 1, id: 1 })
+    user.blogs = user.blogs.concat(populatedBlog._id)
     await user.save()
-    response.status(201).json(savedBlog)
+    response.status(201).json(populatedBlog)
   } catch (error) {
     if (error.name === 'ValidationError') {
       response.status(400).send({ message: 'title and url fields are required' })
@@ -53,7 +54,7 @@ blogsRouter.put('/:id', async (request, response) => {
     url: body.url,
     likes: body.likes
   }
-  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true }).populate('user', { username: 1, name: 1, id: 1 })
   response.json(updatedBlog)
 })
 
