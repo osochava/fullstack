@@ -6,6 +6,7 @@ describe('<Blog />', () => {
   let container
   const likeBlog = vi.fn()
   const deleteBlog = vi.fn()
+  const blogCanBeDeleted = vi.fn()
   beforeEach(() => {
     const blog = {
       title: 'Title of the blog',
@@ -15,7 +16,7 @@ describe('<Blog />', () => {
       user:
         { username: 'user name' }
     }
-    container = render(<Blog blog={blog} likeBlog={likeBlog} deleteBlog={deleteBlog} />).container
+    container = render(<Blog blog={blog} likeBlog={likeBlog} deleteBlog={deleteBlog} blogCanBeDeleted={blogCanBeDeleted} />).container
   })
 
   test('renders its children', async () => {
