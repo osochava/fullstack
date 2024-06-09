@@ -4,9 +4,13 @@ import { toggleVoteOf } from '../reducers/anecdoteReducer'
 const Anecdote = ({ anecdote, handleClick }) => {
   return (
     <li key={anecdote.id}>
-      {anecdote.content}
-      has {anecdote.votes}
-      <button onClick={handleClick}>vote</button>
+      <div>
+        {anecdote.content}
+      </div>
+      <div>
+        has {anecdote.votes}
+        <button onClick={handleClick}>vote</button>
+      </div>
     </li>
   )
 }
@@ -21,7 +25,8 @@ const AnecdoteList = () => {
     return [...prevState].sort(compareByVotes)
   }
 
-  const anecdotes = useSelector(state => SortAnecdotes(state))
+  const anecdotes = useSelector(state =>
+    SortAnecdotes(state.anecdotes.filter(a => a.content.includes(state.filter))))
   const dispatch = useDispatch()
 
   const vote = (id) => {
