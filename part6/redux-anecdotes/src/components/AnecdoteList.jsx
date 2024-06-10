@@ -1,5 +1,4 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { toggleVoteOf } from '../reducers/anecdoteReducer'
 
 const Anecdote = ({ anecdote, handleClick }) => {
   return (
@@ -29,9 +28,9 @@ const AnecdoteList = () => {
     SortAnecdotes(state.anecdotes.filter(a => a.content.includes(state.filter))))
   const dispatch = useDispatch()
 
-  const vote = (id) => {
-    console.log('vote', id)
-    dispatch(toggleVoteOf(id))
+  const vote = (anecdote) => {
+    console.log('vote', anecdote)
+    dispatch({ type: 'anecdotes/addVoteOf', payload: anecdote })
   }
 
   return (
@@ -40,7 +39,7 @@ const AnecdoteList = () => {
         <Anecdote
           key={anecdote.id}
           anecdote={anecdote}
-          handleClick={() => vote(anecdote.id)}
+          handleClick={() => vote(anecdote)}
         />
       )}
     </ul>
