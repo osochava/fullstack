@@ -5,12 +5,11 @@ const AnecdoteForm = () => {
 
   const dispatch = useDispatch()
 
-  const addNewAnecdote = (event) => {
+  const addNewAnecdote = async (event) => {
     event.preventDefault();
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
-
-    dispatch({ type: 'anecdotes/createAnecdote', payload: content })
+    dispatch(createAnecdote(content))
   }
 
   return (

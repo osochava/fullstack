@@ -1,5 +1,5 @@
 import { createSlice, current } from '@reduxjs/toolkit'
-import { addVoteOf, createAnecdote } from './anecdoteReducer'
+import { addVoteOf, appendAnecdote } from './anecdoteReducer'
 
 
 const notificationSlice = createSlice({
@@ -18,9 +18,9 @@ const notificationSlice = createSlice({
         console.log(action);
         return `you voted '${action.payload.content}'`;
       })
-      .addCase(createAnecdote, (state, action) => {
+      .addCase(appendAnecdote, (state, action) => {
         console.log(action)
-        return `you created new anecdote ${action.payload}`
+        return `you created new anecdote ${action.payload.content}`
       })
   }
 })
