@@ -9,21 +9,17 @@ const App = () => {
   const queryClient = useQueryClient()
 
   const dispatch = useNotificationDispatch()
-  const NewNotification = (message, time) => {
-    dispatch({ type: 'NEW_NOTIFICATION', payload: message })
-    setTimeout(() => { dispatch({ type: 'CLEAR' }) }, time)
-  }
 
   const newAnecdoteMutation = useMutation({
     mutationFn: createAnecdote,
     onSuccess: (newAnecdote) => {
       const anecdotes = queryClient.getQueryData(['anecdotes'])
       queryClient.setQueryData(['anecdotes'], anecdotes.concat(newAnecdote))
-      NewNotification(`anecdote '${newAnecdote.content}' created`, 5000)
+      dispatch({ type: 'NEW_NOTIFICATION', payload: `anecdote '${newAnecdote.content}' created` })
     },
     onError: (err) => {
       console.log(err)
-      NewNotification(`${err.message}`, 5000)
+      dispatch({ type: 'NEW_NOTIFICATION', payload: `${err.message}` })
     }
   })
 
@@ -36,8 +32,7 @@ const App = () => {
     onSuccess: (updatedAnecdote) => {
       const anecdotes = queryClient.getQueryData(['anecdotes'])
       queryClient.setQueryData(['anecdotes'], anecdotes.map(a => a.id === updatedAnecdote.id ? updatedAnecdote : a))
-      ///////
-      NewNotification(`anecdote '${updatedAnecdote.content}' voted`, 5000)
+      dispatch({ type: 'NEW_NOTIFICATION', payload: `anecdote '${updatedAnecdote.content}' voted` })
     }
   })
 
@@ -52,8 +47,6 @@ const App = () => {
     refetchOnWindowFocus: false,
     retry: 1
   })
-
-  //  const [notification, notificationDispatch] = useReducer(notificationReducer, '')
 
   if (result.isLoading) {
     return <div>loading data...</div>

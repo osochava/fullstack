@@ -2,29 +2,34 @@ import { createSlice, current } from '@reduxjs/toolkit'
 import { addVoteOf, appendAnecdote } from './anecdoteReducer'
 
 
+const initialState = {
+  message: '',
+  timer: null
+}
+
 const notificationSlice = createSlice({
   name: 'notification',
-  initialState: '',
+  initialState,
   reducers: {
     setNotification: (state, action) => {
       console.log(current(state))
+      console.log(action)
+      if (state.timer)
+        clearTimeout(state.timer)
       return action.payload
     },
-    clearNotification: () => ''
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(addVoteOf, (state, action) => {
-        console.log(action);
-        return `you voted '${action.payload.content}'`;
-      })
-      .addCase(appendAnecdote, (state, action) => {
-        console.log(action)
-        return `you created new anecdote ${action.payload.content}`
-      })
+    clearNotification: () => initialState
   }
 })
 
 
 export const { setNotification, clearNotification } = notificationSlice.actions
+
+export const setNotificationWithTimer = (message, delay) => {
+  return dispatch => {
+    const timer = setTimeout(() => dispatch(clearNotification()), delay * 1000)
+    dispatch(setNotification({ message: message, timer: timer }))
+  }
+}
+
 export default notificationSlice.reducer

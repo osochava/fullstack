@@ -8,8 +8,9 @@ export const getAnecdotes = () =>
 
 export const createAnecdote = newAnecdote =>
   axios.post(baseUrl, newAnecdote).then(res => res.data).catch(error => {
-    console.log(error.response.data.error)
-    throw new Error(error.response.data.error)
+    const message = error.response === null ? error.message : error.response.data.error
+    console.error(message)
+    throw new Error(message)
   })
 
 export const updateAnecdote = updatedAnecdote =>
