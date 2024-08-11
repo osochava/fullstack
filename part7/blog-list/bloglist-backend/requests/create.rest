@@ -1,0 +1,42 @@
+GET http://localhost:3003/api/blogs
+###
+POST http://localhost:3003/api/blogs/ 
+content-type: application/json
+
+{
+    "title": "sample blog 5",
+    "author": "o.s.",
+    "url": "www.sample3.org",
+    "likes": 4
+}
+
+###
+POST http://localhost:3003/api/blogs/ 
+content-type: application/json
+
+{
+    "author": "o.s.",
+    "url": "www.sample6.org",
+    "likes": 4
+}
+
+###
+PUT http://localhost:3003/api/blogs/65a6d33912f4b3485db69b96
+content-type: application/json
+
+{
+    "title": "sample blog",
+    "likes": 7
+}
+
+
+###
+POST http://localhost:3003/api/users/ 
+content-type: application/json
+
+{
+    "username": "admin2",
+    "name": "adminadmin",
+    "password": "pwdd"
+}
+
