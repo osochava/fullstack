@@ -6,6 +6,8 @@ import loginService from "./services/loginService";
 import NewBlogForm from "./components/NewBlog";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
+import { setNoficationWithTimeout } from "./reducers/notificationReducer";
+import { useDispatch } from "react-redux";
 
 const loggedParamName = "loggedBlogAppUser";
 const App = () => {
@@ -14,13 +16,12 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [notificationMessage, setNotificationMessage] = useState(null);
-  const [isError, setIsError] = useState(false);
 
   const compareByLikes = (firstItem, secondItem) => {
     return secondItem.likes - firstItem.likes;
   };
 
+  const dispatch = useDispatch();
   useEffect(() => {
     const loggedBlogUser = window.localStorage.getItem(loggedParamName);
     if (loggedBlogUser) {
@@ -42,12 +43,7 @@ const App = () => {
   const blogFormRef = useRef();
 
   const updateNotification = (message, isErr) => {
-    setNotificationMessage(message);
-    setIsError(isErr);
-    setTimeout(() => {
-      setNotificationMessage(null);
-      setIsError(false);
-    }, 5000);
+    dispatch(setNoficationWithTimeout(message, isErr, 5));
   };
 
   const handleLogin = async (event) => {
@@ -130,7 +126,7 @@ const App = () => {
       setBlogs(updatedBlogList);
     } catch (exception) {
       updateNotification(
-        "something went wrong, new blog was not removed",
+        "something went wrong, the blog was not removed",
         true,
       );
       console.log(exception);
@@ -152,10 +148,7 @@ const App = () => {
     return (
       <div>
         <h2>log in to application</h2>
-        <Notification
-          message={notificationMessage}
-          isError={isError}
-        ></Notification>
+        <Notification />
         <LoginComponent
           username={username}
           handleUsernameChange={(name) => {
@@ -174,10 +167,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification
-        message={notificationMessage}
-        isError={isError}
-      ></Notification>
+      <Notification />
       <div>
         {user.name} logged in<button onClick={handleLogout}>logout</button>
       </div>
